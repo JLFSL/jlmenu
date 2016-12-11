@@ -39,6 +39,8 @@ struct HookContext
 };
 HookContext* presenthook64;
 
+bool showfivempwindow = true;
+
 HRESULT __stdcall hookD3D11Present(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT Flags)
 {
 	if (firstTime)
@@ -48,6 +50,31 @@ HRESULT __stdcall hookD3D11Present(IDXGISwapChain* pSwapChain, UINT SyncInterval
 
 		firstTime = false;
 	}
+
+	ImGui_ImplDX11_Init(hWnd, pDevice, pContext);
+
+	ImGui_ImplDX11_NewFrame();
+
+	Player playerid = PLAYER::PLAYER_ID();
+	Ped player = PLAYER::GET_PLAYER_PED(playerid);
+
+	if (showfivempwindow) {
+		ImGui::SetNextWindowPos(ImVec2(100, 100));
+		ImGui::SetNextWindowSize(ImVec2(300, 200));
+		ImGui::Begin(" FiveMP Information", &showfivempwindow, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_AlwaysAutoResize);
+
+		Vector3 coords = ENTITY::GET_ENTITY_COORDS(player, ENTITY::IS_ENTITY_DEAD(player));
+		const int task = 0/*= LocalPlayer->GetCurrentTask()*/;
+
+		ImGui::Text("task %i", task);
+		ImGui::Text("pos %f %f %f", coords.x, coords.y, coords.z);
+		ImGui::Text("");
+		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
+		ImGui::End();
+	}
+
+	ImGui::Render();
 
 	return phookD3D11Present(pSwapChain, SyncInterval, Flags);
 }
@@ -82,8 +109,10 @@ DWORD __stdcall InitializeHook(LPVOID)
 
 	if (FAILED(D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, NULL, &featureLevel, 1, D3D11_SDK_VERSION, &swapChainDesc, &pSwapChain, &pDevice, NULL, &pContext)))
 	{
+		Logger::Msg("DX11: Failed");
 		return NULL;
 	}
+	Logger::Msg("DX11: Success");
 
 	pSwapChainVtable = (DWORD_PTR*)pSwapChain;
 	pSwapChainVtable = (DWORD_PTR*)pSwapChainVtable[0];

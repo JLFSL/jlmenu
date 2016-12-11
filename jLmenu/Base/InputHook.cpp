@@ -37,7 +37,7 @@ bool InputHook::Initialize() {
 	}
 	else {
 
-		keyboardHandlerRegister(OnKeyboardMessage);
+		keyboardHandlerRegister(sd_OnKeyboardMessage);
 		DEBUGMSG("Input hook attached:  WndProc 0x%p", (DWORD_PTR)oWndProc);
 		return true;
 	}

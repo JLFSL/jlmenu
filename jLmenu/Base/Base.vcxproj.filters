@@ -16,9 +16,6 @@
     <ClCompile Include="NativeInvoker.cpp">
       <Filter>Include\SudoMod</Filter>
     </ClCompile>
-    <ClCompile Include="Script.cpp">
-      <Filter>Include\SudoMod</Filter>
-    </ClCompile>
     <ClCompile Include="CrossMapping.cpp">
       <Filter>Include\SudoMod</Filter>
     </ClCompile>
@@ -32,6 +29,18 @@
       <Filter>DirectX</Filter>
     </ClCompile>
     <ClCompile Include="Main.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_impl_dx11.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_draw.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Script.cpp">
       <Filter>Common</Filter>
     </ClCompile>
   </ItemGroup>
@@ -93,6 +102,27 @@
     <ClInclude Include="DX11Renderer.h">
       <Filter>DirectX</Filter>
     </ClInclude>
+    <ClInclude Include="imgui_impl_dx11.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_internal.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_rect_pack.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_textedit.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_truetype.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imconfig.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Include">
@@ -115,6 +145,9 @@
     </Filter>
     <Filter Include="Common">
       <UniqueIdentifier>{3f930127-0e4b-40cc-9b93-c9e5f4c794bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui">
+      <UniqueIdentifier>{3b332f39-0eb7-4275-941e-2f22b0deb7b7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

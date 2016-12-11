@@ -259,7 +259,7 @@ void Hooking::Cleanup()
 {
 	Logger::Msg("Clean");
 
-	iHook.keyboardHandlerUnregister(OnKeyboardMessage);
+	iHook.keyboardHandlerUnregister(sd_OnKeyboardMessage);
 	iHook.Remove();
 	MH_DisableHook(&ResetWriteWatch);
 	MH_Uninitialize();

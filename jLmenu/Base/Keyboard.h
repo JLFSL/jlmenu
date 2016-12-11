@@ -41,14 +41,14 @@
 #define VK_KEY_Y	0x59                //('Y')	Y
 #define VK_KEY_Z	0x5A                //('Z')	Z
 
-#define IsKeyPressed(key) GetAsyncKeyState(key) & 0x8000
+#define sd_IsKeyPressed(key) GetAsyncKeyState(key) & 0x8000
 
 // parameters are the same as with aru's ScriptHook for IV
-void OnKeyboardMessage(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtended, BOOL isWithAlt, BOOL wasDownBefore, BOOL isUpNow);
-bool KeyDown(DWORD key);
-bool KeyJustUp(DWORD key, bool exclusive = true);
-bool KeyPressedOnce(bool& bIsPressed, DWORD vk);
-void ResetKeyState(DWORD key);
+void sd_OnKeyboardMessage(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtended, BOOL isWithAlt, BOOL wasDownBefore, BOOL isUpNow);
+bool sd_KeyDown(DWORD key);
+bool sd_KeyJustUp(DWORD key, bool exclusive = true);
+bool sd_KeyPressedOnce(bool& bIsPressed, DWORD vk);
+void sd_ResetKeyState(DWORD key);
 
 enum navsound {
 	NAV_OPEN,

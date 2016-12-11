@@ -18,6 +18,9 @@
 #include <set>
 using namespace std;
 
+// Shared
+#include "../../Shared/Common.h"
+
 // DirectX 11
 #include <d3d11_2.h>
 
@@ -40,5 +43,11 @@ using namespace std;
 #include "script.h"
 
 // DirectX
-#include "BeaEngine.h"
 #include "DX11Renderer.h"
+
+// BeaEngine
+#include "BeaEngine.h"
+
+// ImGui
+#include "imgui.h"
+#include "imgui_impl_dx11.h"
