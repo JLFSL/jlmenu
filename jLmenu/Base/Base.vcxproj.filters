@@ -2,152 +2,163 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="InputHook.cpp">
-      <Filter>Include\SudoMod</Filter>
+      <Filter>Libraries\SudoMod</Filter>
     </ClCompile>
     <ClCompile Include="Keyboard.cpp">
-      <Filter>Include\SudoMod</Filter>
+      <Filter>Libraries\SudoMod</Filter>
     </ClCompile>
     <ClCompile Include="Logger.cpp">
-      <Filter>Include\SudoMod</Filter>
+      <Filter>Libraries\SudoMod</Filter>
     </ClCompile>
     <ClCompile Include="Memory.cpp">
-      <Filter>Include\SudoMod</Filter>
+      <Filter>Libraries\SudoMod</Filter>
     </ClCompile>
     <ClCompile Include="NativeInvoker.cpp">
-      <Filter>Include\SudoMod</Filter>
+      <Filter>Libraries\SudoMod</Filter>
     </ClCompile>
     <ClCompile Include="CrossMapping.cpp">
-      <Filter>Include\SudoMod</Filter>
+      <Filter>Libraries\SudoMod</Filter>
     </ClCompile>
     <ClCompile Include="Hooking.cpp">
-      <Filter>Include\SudoMod</Filter>
-    </ClCompile>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>Include</Filter>
+      <Filter>Libraries\SudoMod</Filter>
     </ClCompile>
     <ClCompile Include="DX11Renderer.cpp">
-      <Filter>DirectX</Filter>
+      <Filter>Libraries\DirectX</Filter>
     </ClCompile>
     <ClCompile Include="Main.cpp">
       <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="imgui_impl_dx11.cpp">
-      <Filter>ImGui</Filter>
+      <Filter>Libraries\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="imgui.cpp">
-      <Filter>ImGui</Filter>
+      <Filter>Libraries\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="imgui_draw.cpp">
-      <Filter>ImGui</Filter>
+      <Filter>Libraries\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="Script.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="KeyboardHook.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="MouseHook.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="InputHook.h">
-      <Filter>Include\SudoMod</Filter>
+      <Filter>Libraries\SudoMod</Filter>
     </ClInclude>
     <ClInclude Include="Keyboard.h">
-      <Filter>Include\SudoMod</Filter>
+      <Filter>Libraries\SudoMod</Filter>
     </ClInclude>
     <ClInclude Include="Logger.h">
-      <Filter>Include\SudoMod</Filter>
+      <Filter>Libraries\SudoMod</Filter>
     </ClInclude>
     <ClInclude Include="Memory.h">
-      <Filter>Include\SudoMod</Filter>
+      <Filter>Libraries\SudoMod</Filter>
     </ClInclude>
     <ClInclude Include="NativeCaller.h">
-      <Filter>Include\SudoMod</Filter>
+      <Filter>Libraries\SudoMod</Filter>
     </ClInclude>
     <ClInclude Include="NativeInvoker.h">
-      <Filter>Include\SudoMod</Filter>
+      <Filter>Libraries\SudoMod</Filter>
     </ClInclude>
     <ClInclude Include="Script.h">
-      <Filter>Include\SudoMod</Filter>
+      <Filter>Libraries\SudoMod</Filter>
     </ClInclude>
     <ClInclude Include="CrossMapping.h">
-      <Filter>Include\SudoMod</Filter>
+      <Filter>Libraries\SudoMod</Filter>
     </ClInclude>
     <ClInclude Include="Hooking.h">
-      <Filter>Include\SudoMod</Filter>
+      <Filter>Libraries\SudoMod</Filter>
     </ClInclude>
     <ClInclude Include="Types.h">
-      <Filter>Include\SudoMod\Structs</Filter>
+      <Filter>Libraries\SudoMod\Structs</Filter>
     </ClInclude>
     <ClInclude Include="Enums.h">
-      <Filter>Include\SudoMod\Structs</Filter>
+      <Filter>Libraries\SudoMod\Structs</Filter>
     </ClInclude>
     <ClInclude Include="Natives.h">
-      <Filter>Include\SudoMod\Structs</Filter>
+      <Filter>Libraries\SudoMod\Structs</Filter>
     </ClInclude>
     <ClInclude Include="Structs.h">
-      <Filter>Include\SudoMod\Structs</Filter>
+      <Filter>Libraries\SudoMod\Structs</Filter>
     </ClInclude>
     <ClInclude Include="..\MinHook\include\MinHook.h">
-      <Filter>Include\MinHook</Filter>
-    </ClInclude>
-    <ClInclude Include="stdafx.h">
-      <Filter>Include</Filter>
+      <Filter>Libraries\MinHook</Filter>
     </ClInclude>
     <ClInclude Include="basic_types.h">
-      <Filter>BeaEngine</Filter>
+      <Filter>Libraries\BeaEngine</Filter>
     </ClInclude>
     <ClInclude Include="BeaEngine.h">
-      <Filter>BeaEngine</Filter>
+      <Filter>Libraries\BeaEngine</Filter>
     </ClInclude>
     <ClInclude Include="export.h">
-      <Filter>BeaEngine</Filter>
+      <Filter>Libraries\BeaEngine</Filter>
     </ClInclude>
     <ClInclude Include="DX11Renderer.h">
-      <Filter>DirectX</Filter>
+      <Filter>Libraries\DirectX</Filter>
     </ClInclude>
     <ClInclude Include="imgui_impl_dx11.h">
-      <Filter>ImGui</Filter>
+      <Filter>Libraries\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="imgui_internal.h">
-      <Filter>ImGui</Filter>
+      <Filter>Libraries\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="stb_rect_pack.h">
-      <Filter>ImGui</Filter>
+      <Filter>Libraries\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="stb_textedit.h">
-      <Filter>ImGui</Filter>
+      <Filter>Libraries\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="stb_truetype.h">
-      <Filter>ImGui</Filter>
+      <Filter>Libraries\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="imconfig.h">
-      <Filter>ImGui</Filter>
+      <Filter>Libraries\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="imgui.h">
-      <Filter>ImGui</Filter>
+      <Filter>Libraries\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="MouseHook.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyboardHook.h">
+      <Filter>Input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Include">
-      <UniqueIdentifier>{f5c6d551-d620-4691-bcbc-f43e9fcaa535}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Include\SudoMod">
-      <UniqueIdentifier>{9e879b09-bdab-4e95-88a1-858ce6a29cdd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Include\SudoMod\Structs">
-      <UniqueIdentifier>{7ce0d7d5-0bbe-4fd0-b32e-52d070f9a778}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Include\MinHook">
-      <UniqueIdentifier>{1d751e3e-9999-431f-91ab-320024e3b158}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="DirectX">
-      <UniqueIdentifier>{7eb03aff-9063-48e5-af49-7c3de6d3032d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="BeaEngine">
-      <UniqueIdentifier>{a754273f-b060-441d-bd52-10df50c1ac38}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Common">
       <UniqueIdentifier>{3f930127-0e4b-40cc-9b93-c9e5f4c794bc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ImGui">
+    <Filter Include="Libraries">
+      <UniqueIdentifier>{22034ab9-02d2-4a98-a77d-940cd5ef0914}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\DirectX">
+      <UniqueIdentifier>{7eb03aff-9063-48e5-af49-7c3de6d3032d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\BeaEngine">
+      <UniqueIdentifier>{a754273f-b060-441d-bd52-10df50c1ac38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\ImGui">
       <UniqueIdentifier>{3b332f39-0eb7-4275-941e-2f22b0deb7b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\MinHook">
+      <UniqueIdentifier>{1d751e3e-9999-431f-91ab-320024e3b158}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\SudoMod">
+      <UniqueIdentifier>{9e879b09-bdab-4e95-88a1-858ce6a29cdd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\SudoMod\Structs">
+      <UniqueIdentifier>{7ce0d7d5-0bbe-4fd0-b32e-52d070f9a778}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input">
+      <UniqueIdentifier>{35265403-e5eb-4832-a65c-ee25964e2cec}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -51,3 +51,7 @@ using namespace std;
 // ImGui
 #include "imgui.h"
 #include "imgui_impl_dx11.h"
+
+// Input
+#include "MouseHook.h"
+#include "KeyboardHook.h"
