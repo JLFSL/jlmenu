@@ -1,9 +1,7 @@
 #include "stdafx.h"
 
 void MouseHook::InstallHook() {
-	if (!(hook = SetWindowsHookEx(WH_MOUSE_LL, MouseHookCallback, NULL, 0))) {
-		printf_s("Error: %x \n", GetLastError());
-	}
+	hook = SetWindowsHookEx(WH_MOUSE_LL, MouseHookCallback, NULL, 0);
 }
 
 void MouseHook::UninstallHook() {

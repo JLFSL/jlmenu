@@ -5,6 +5,7 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Base", "jLmenu\Base\Base.vcxproj", "{75F77360-2579-4BE2-B5E0-CC8419527498}"
 	ProjectSection(ProjectDependencies) = postProject
+		{D0249B3E-D525-41B3-941F-95740F35C21C} = {D0249B3E-D525-41B3-941F-95740F35C21C}
 		{C08B48E9-EF6B-4639-B71D-C4F93B839DA0} = {C08B48E9-EF6B-4639-B71D-C4F93B839DA0}
 	EndProjectSection
 EndProject

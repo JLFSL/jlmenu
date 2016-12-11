@@ -138,7 +138,18 @@ HRESULT __stdcall hookD3D11Present(IDXGISwapChain* pSwapChain, UINT SyncInterval
 		}
 
 	}
+
+	ImGuiIO& io = ImGui::GetIO();
+
+	POINT cursor;
+	GetCursorPos(&cursor);
+	ScreenToClient(hWnd, &cursor);
+	io.MousePos.x = cursor.x;
+	io.MousePos.y = cursor.y;
+
 	ImGui_ImplDX11_NewFrame();
+
+	io.WantTextInput = true;
 
 	Script::dxTick();
 	
