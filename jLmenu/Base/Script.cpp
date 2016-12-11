@@ -34,6 +34,16 @@ bool Script::isInit()
 	return true;
 }
 
+#define MAX_PLAYERS 32
+struct Players {
+	int id;
+	Ped ped;
+
+	char *name;
+	float health;
+	float maxhealth;
+} players[MAX_PLAYERS];
+
 static bool jl_NeverWanted = false;
 static bool jl_GodMode = false;
 static bool jl_DisableRagdoll = false;
@@ -52,10 +62,14 @@ void Script::onTick()
 	Player playerid = PLAYER::PLAYER_ID();
 	Ped player = PLAYER::GET_PLAYER_PED(playerid);
 
-	if (sd_KeyJustUp(VK_F8)) {
-		Vector3 CurrentCoordinates = ENTITY::GET_ENTITY_COORDS(player, ENTITY::IS_ENTITY_DEAD(player));
+	for (int i = 0; i < MAX_PLAYERS + 1; i++)
+	{
+		players[i].id = i;
+		players[i].ped = PLAYER::GET_PLAYER_PED(i);
 
-		ENTITY::SET_ENTITY_COORDS_NO_OFFSET(player, CurrentCoordinates.x, CurrentCoordinates.y, CurrentCoordinates.z+3.0f, false, false, false);
+		players[i].name = PLAYER::GET_PLAYER_NAME(i);
+		players[i].health = ENTITY::GET_ENTITY_HEALTH(players[i].ped);
+		players[i].maxhealth = ENTITY::GET_ENTITY_MAX_HEALTH(players[i].ped);
 	}
 
 	if (jl_NeverWanted && PLAYER::GET_PLAYER_WANTED_LEVEL(playerid) != 0)
@@ -142,6 +156,21 @@ void Script::dxTick()
 			ImGui::Checkbox("Fire Ammo", &jl_FireAmmo);
 			ImGui::Checkbox("Explosive Ammo", &jl_ExplosiveAmmo);
 			ImGui::Checkbox("Explosive Melee", &jl_ExplosiveMelee);
+		}
+		if (ImGui::CollapsingHeader("Connected Player Options"))
+		{
+			for (int i = 0; i < MAX_PLAYERS + 1; i++)
+			{
+				if (players[i].name != "**INVALID**") {
+					char *headername;
+					sprintf(headername, "[%d] %s - %f(%f)", i, players[i].name, players[i].health, players[i].maxhealth);
+
+					if (ImGui::CollapsingHeader(headername))
+					{
+
+					}
+				}
+			}
 		}
 
 		ImGui::SetWindowFocus();
