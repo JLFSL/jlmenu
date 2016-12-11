@@ -42,6 +42,8 @@ struct Players {
 	char *name;
 	float health;
 	float maxhealth;
+
+	Vector3 coordinates;
 } players[MAX_PLAYERS];
 
 static bool jl_NeverWanted = false;
@@ -57,6 +59,9 @@ static bool jl_FireAmmo = false;
 static bool jl_ExplosiveAmmo = false;
 static bool jl_ExplosiveMelee = false;
 
+static bool jl_TeleportToPlayer = false;
+static int jl_TeleportTo = 0;
+
 void Script::onTick()
 {
 	Player playerid = PLAYER::PLAYER_ID();
@@ -70,6 +75,8 @@ void Script::onTick()
 		players[i].name = PLAYER::GET_PLAYER_NAME(i);
 		players[i].health = ENTITY::GET_ENTITY_HEALTH(players[i].ped);
 		players[i].maxhealth = ENTITY::GET_ENTITY_MAX_HEALTH(players[i].ped);
+
+		players[i].coordinates = ENTITY::GET_ENTITY_COORDS(players[i].ped, ENTITY::IS_ENTITY_DEAD(players[i].ped));
 	}
 
 	if (jl_NeverWanted && PLAYER::GET_PLAYER_WANTED_LEVEL(playerid) != 0)
@@ -108,6 +115,11 @@ void Script::onTick()
 	if (jl_ExplosiveMelee)
 			GAMEPLAY::SET_EXPLOSIVE_MELEE_THIS_FRAME(playerid);
 
+	if (jl_TeleportToPlayer) {
+		int telto = jl_TeleportTo;
+		ENTITY::SET_ENTITY_COORDS_NO_OFFSET(player, players[telto].coordinates.x+2.0f, players[telto].coordinates.y, players[telto].coordinates.z, false, false, false);
+		jl_TeleportToPlayer = false;
+	}
 }
 
 bool showjlmenu = true;
@@ -162,10 +174,16 @@ void Script::dxTick()
 			ImGui::BeginChild("Players");
 			for (int i = 0; i < MAX_PLAYERS + 1; i++)
 			{
-				if (players[i].name != "**Invalid**") {
+				if (ENTITY::DOES_ENTITY_EXIST(players[i].ped)) {
 					if (ImGui::CollapsingHeader(players[i].name))
 					{
+						ImGui::Text("Health: %f(%f)", players[i].health, players[i].maxhealth);
+						ImGui::Text("Coordinates: %f, %f, %f", players[i].coordinates.x, players[i].coordinates.y, players[i].coordinates.z);
 
+						if(ImGui::Button("Teleport")) {
+							jl_TeleportTo = i;
+							jl_TeleportToPlayer = true;
+						}
 					}
 				}
 			}
