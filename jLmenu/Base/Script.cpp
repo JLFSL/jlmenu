@@ -66,12 +66,6 @@ static bool jl_ReduceGrip_Set = false;
 
 static bool jl_TeleportToPlayer = false;
 static int jl_TeleportTo = 0;
-static bool jl_TeleportPlayerHere = false;
-static int jl_TeleportHere = 0;
-static bool jl_PlayerGodMode = false;
-static int jl_PlayerGodMode_p = 0;
-static bool jl_PlayerNeverWanted = false;
-static int jl_PlayerNeverWanted_p = 0;
 
 void Script::onTick()
 {
@@ -131,19 +125,6 @@ void Script::onTick()
 		ENTITY::SET_ENTITY_COORDS_NO_OFFSET(player, players[telto].coordinates.x+2.0f, players[telto].coordinates.y, players[telto].coordinates.z, false, false, false);
 		jl_TeleportToPlayer = false;
 	}
-
-	if (jl_TeleportPlayerHere) {
-		int telhere = jl_TeleportHere;
-		Vector3 coords = ENTITY::GET_ENTITY_COORDS(player, ENTITY::IS_ENTITY_DEAD(player));
-		ENTITY::SET_ENTITY_COORDS_NO_OFFSET(players[telhere].ped, coords.x, coords.y, coords.z, false, false, false);
-		jl_TeleportPlayerHere = false;
-	}
-
-	if (jl_PlayerNeverWanted && PLAYER::GET_PLAYER_WANTED_LEVEL(jl_PlayerNeverWanted_p) != 0)
-		PLAYER::CLEAR_PLAYER_WANTED_LEVEL(jl_PlayerNeverWanted_p);
-
-	if (jl_PlayerGodMode)
-		ENTITY::SET_ENTITY_HEALTH(players[jl_PlayerNeverWanted_p].ped, ENTITY::GET_ENTITY_MAX_HEALTH(players[jl_PlayerNeverWanted_p].ped) - 1.0);
 
 	if (jl_SpeedUpVehicle) {
 		Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(player, false);
@@ -237,19 +218,6 @@ void Script::dxTick()
 						if(ImGui::Button("Teleport")) {
 							jl_TeleportTo = i;
 							jl_TeleportToPlayer = true;
-						}
-						if (ImGui::Button("Teleport Here")) {
-							jl_TeleportHere = i;
-							jl_TeleportPlayerHere = true;
-						}
-
-						if(ImGui::Checkbox("God Mode", &jl_PlayerGodMode))
-						{
-							jl_PlayerGodMode_p = i;
-						}
-						if(ImGui::Checkbox("Never Wanted", &jl_PlayerNeverWanted))
-						{
-							jl_PlayerNeverWanted_p = i;
 						}
 					}
 				}
