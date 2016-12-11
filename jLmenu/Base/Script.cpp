@@ -159,18 +159,17 @@ void Script::dxTick()
 		}
 		if (ImGui::CollapsingHeader("Connected Player Options"))
 		{
+			ImGui::BeginChild("Players");
 			for (int i = 0; i < MAX_PLAYERS + 1; i++)
 			{
-				if (players[i].name != "**INVALID**") {
-					char *headername;
-					sprintf(headername, "[%d] %s - %f(%f)", i, players[i].name, players[i].health, players[i].maxhealth);
-
-					if (ImGui::CollapsingHeader(headername))
+				if (players[i].name != "**Invalid**") {
+					if (ImGui::CollapsingHeader(players[i].name))
 					{
 
 					}
 				}
 			}
+			ImGui::EndChild();
 		}
 
 		ImGui::SetWindowFocus();
