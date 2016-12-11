@@ -61,6 +61,7 @@ static float jl_FastSwim_f = 1.0f;
 static bool jl_FireAmmo = false;
 static bool jl_ExplosiveAmmo = false;
 static bool jl_ExplosiveMelee = false;
+static bool jl_StatRP = false;
 
 static bool jl_SpeedUpVehicle = false;
 static bool jl_RepairVehicle = false;
@@ -130,6 +131,14 @@ void Script::onTick()
 	if (jl_ExplosiveMelee)
 			GAMEPLAY::SET_EXPLOSIVE_MELEE_THIS_FRAME(playerid);
 
+	if (jl_StatRP) {
+		PLAYER::SET_PLAYER_WANTED_LEVEL(playerid, 5, false);
+		PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(playerid, false);
+
+		PLAYER::SET_PLAYER_WANTED_CENTRE_POSITION(playerid, 9000.0f, 9000.0f, 9000.0f);
+		PLAYER::CLEAR_PLAYER_WANTED_LEVEL(playerid);
+	}
+
 	if (jl_TeleportToPlayer) {
 		int telto = jl_TeleportTo;
 		ENTITY::SET_ENTITY_COORDS_NO_OFFSET(player, players[telto].coordinates.x+2.0f, players[telto].coordinates.y, players[telto].coordinates.z, false, false, false);
@@ -186,7 +195,7 @@ void Script::dxTick()
 
 			ImGui::Text("Health");
 			if (ImGui::Checkbox("God Mode", &jl_GodMode_t)) jl_GodMode = true;
-			if (ImGui::Checkbox("Visible"), &jl_Visible_t)) jl_Visible_t = true;
+			if (ImGui::Checkbox("Visible", &jl_Visible_t)) jl_Visible_t = true;
 			if (ImGui::Button("Suicide")) jl_Suicide = true;
 
 			ImGui::Separator();
@@ -204,6 +213,11 @@ void Script::dxTick()
 			ImGui::Checkbox("Fire Ammo", &jl_FireAmmo);
 			ImGui::Checkbox("Explosive Ammo", &jl_ExplosiveAmmo);
 			ImGui::Checkbox("Explosive Melee", &jl_ExplosiveMelee);
+
+			ImGui::Separator();
+
+			ImGui::Text("Statistics");
+			ImGui::Checkbox("RP Cheat", &jl_StatRP);
 		}
 		// Vehicle
 		if (ImGui::CollapsingHeader("Vehicle"))
