@@ -49,6 +49,8 @@ struct Players {
 static bool jl_NeverWanted = false;
 static bool jl_GodMode = false;
 static bool jl_GodMode_t = false;
+static bool jl_Visible = true;
+static bool jl_Visible_t = true;
 static bool jl_DisableRagdoll = false;
 static bool jl_Suicide = false;
 static bool jl_SuperJump = false;
@@ -91,6 +93,11 @@ void Script::onTick()
 	if (jl_GodMode) {
 		ENTITY::SET_ENTITY_INVINCIBLE(player, jl_GodMode_t);
 		jl_GodMode = false;
+	}
+
+	if (jl_Visible) {
+		ENTITY::SET_ENTITY_VISIBLE(player, jl_Visible_t, false);
+		jl_Visible = false;
 	}
 
 	if (PED::CAN_PED_RAGDOLL(player) != !jl_DisableRagdoll)
@@ -179,6 +186,7 @@ void Script::dxTick()
 
 			ImGui::Text("Health");
 			if (ImGui::Checkbox("God Mode", &jl_GodMode_t)) jl_GodMode = true;
+			if (ImGui::Checkbox("Visible"), &jl_Visible_t)) jl_Visible_t = true;
 			if (ImGui::Button("Suicide")) jl_Suicide = true;
 
 			ImGui::Separator();
