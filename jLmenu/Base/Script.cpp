@@ -59,7 +59,7 @@ void Script::onTick()
 	}
 
 	if (jl_NeverWanted && PLAYER::GET_PLAYER_WANTED_LEVEL(playerid) != 0)
-		PLAYER::CLEAR_PLAYER_WANTED_LEVEL(player);
+		PLAYER::CLEAR_PLAYER_WANTED_LEVEL(playerid);
 
 	if (jl_GodMode)
 		ENTITY::SET_ENTITY_HEALTH(player, ENTITY::GET_ENTITY_MAX_HEALTH(player) - 1.0);
@@ -76,14 +76,24 @@ void Script::onTick()
 		GAMEPLAY::SET_SUPER_JUMP_THIS_FRAME(playerid);
 
 	if (jl_FastRun) {
-		PLAYER::SET_RUN_SPRINT_MULTIPLIER_FOR_PLAYER(player, jl_FastRun_f);
+		PLAYER::SET_RUN_SPRINT_MULTIPLIER_FOR_PLAYER(playerid, jl_FastRun_f);
 		jl_FastRun = false;
 	}
 
 	if (jl_FastSwim) {
-		PLAYER::SET_RUN_SPRINT_MULTIPLIER_FOR_PLAYER(player, jl_FastSwim_f);
+		PLAYER::SET_RUN_SPRINT_MULTIPLIER_FOR_PLAYER(playerid, jl_FastSwim_f);
 		jl_FastSwim = false;
 	}
+
+	if (jl_FireAmmo)
+			GAMEPLAY::SET_FIRE_AMMO_THIS_FRAME(playerid);
+
+	if (jl_ExplosiveAmmo)
+			GAMEPLAY::SET_EXPLOSIVE_AMMO_THIS_FRAME(playerid);
+
+	if (jl_ExplosiveMelee)
+			GAMEPLAY::SET_EXPLOSIVE_MELEE_THIS_FRAME(playerid);
+
 }
 
 bool showjlmenu = true;
@@ -99,8 +109,10 @@ void Script::dxTick()
 		io.MouseDrawCursor = true;
 
 		ImGui::SetNextWindowPos(ImVec2(100, 100));
-		ImGui::SetNextWindowSize(ImVec2(300, 200));
-		ImGui::Begin(" jLmenu", &showjlmenu, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings);
+		ImGui::SetNextWindowSize(ImVec2(550, 300), ImGuiSetCond_FirstUseEver);
+		ImGui::Begin(" jLmenu", &showjlmenu, ImGuiWindowFlags_NoSavedSettings);
+
+		ImGui::PushItemWidth(-140);
 
 		// Player
 		if (ImGui::CollapsingHeader("Player Options"))
@@ -119,9 +131,9 @@ void Script::dxTick()
 
 			ImGui::Text("Movement");
 			ImGui::Checkbox("Super Jump", &jl_SuperJump);
-			if (ImGui::DragFloat("Running Speed", &jl_FastRun_f))
+			if (ImGui::SliderFloat("Running Speed", &jl_FastRun_f, 0.0f, 1.49f))
 				jl_FastRun = true;
-			if (ImGui::DragFloat("Swimming Speed", &jl_FastSwim_f))
+			if (ImGui::SliderFloat("Swimming Speed", &jl_FastSwim_f, 0.0f, 1.49f))
 				jl_FastSwim = true;
 
 			ImGui::Separator();
@@ -132,6 +144,7 @@ void Script::dxTick()
 			ImGui::Checkbox("Explosive Melee", &jl_ExplosiveMelee);
 		}
 
+		ImGui::SetWindowFocus();
 		ImGui::End();
 	}
 }
