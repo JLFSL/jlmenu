@@ -81,7 +81,7 @@ void Script::onTick()
 	}
 
 	if (jl_FastSwim) {
-		PLAYER::SET_RUN_SPRINT_MULTIPLIER_FOR_PLAYER(playerid, jl_FastSwim_f);
+		PLAYER::SET_SWIM_MULTIPLIER_FOR_PLAYER(playerid, jl_FastSwim_f);
 		jl_FastSwim = false;
 	}
 
