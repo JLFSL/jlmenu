@@ -131,9 +131,9 @@ void Script::dxTick()
 
 			ImGui::Text("Movement");
 			ImGui::Checkbox("Super Jump", &jl_SuperJump);
-			if (ImGui::SliderFloat("Running Speed", &jl_FastRun_f, 0.0f, 1.49f))
+			if (ImGui::SliderFloat("Running Speed", &jl_FastRun_f, 1.0f, 1.49f))
 				jl_FastRun = true;
-			if (ImGui::SliderFloat("Swimming Speed", &jl_FastSwim_f, 0.0f, 1.49f))
+			if (ImGui::SliderFloat("Swimming Speed", &jl_FastSwim_f, 1.0f , 1.49f))
 				jl_FastSwim = true;
 
 			ImGui::Separator();
