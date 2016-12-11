@@ -50,7 +50,7 @@ HRESULT __stdcall hookD3D11Present(IDXGISwapChain* pSwapChain, UINT SyncInterval
 
 		{
 			ImGuiStyle& style = ImGui::GetStyle();
-			bool bStyleDark_ = true;
+			bool bStyleDark_ = false;
 			float alpha_ = 1.0;
 
 			// light style from Pacôme Danhiez (user itamago) https://github.com/ocornut/imgui/pull/511#issuecomment-175719267
@@ -137,6 +137,15 @@ HRESULT __stdcall hookD3D11Present(IDXGISwapChain* pSwapChain, UINT SyncInterval
 			firstTime = false;
 		}
 
+		ImGuiIO& ioinit = ImGui::GetIO();
+		//ioinit.Fonts->AddFontDefault();
+
+		//Default (English & Cyrillic)
+		ImFontConfig font_config;
+		font_config.MergeMode = true;
+		font_config.OversampleH = font_config.OversampleV = 1;
+		font_config.PixelSnapH = true;
+		ioinit.Fonts->AddFontFromFileTTF("Roboto-Regular.ttf", 18.0f);
 	}
 
 	ImGuiIO& io = ImGui::GetIO();
