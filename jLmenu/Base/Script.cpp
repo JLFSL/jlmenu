@@ -44,7 +44,7 @@ struct Players {
 	float maxhealth;
 
 	Vector3 coordinates;
-} players[MAX_PLAYERS];
+} players[1000];
 
 static bool jl_NeverWanted = false;
 static bool jl_GodMode = false;
@@ -59,8 +59,19 @@ static bool jl_FireAmmo = false;
 static bool jl_ExplosiveAmmo = false;
 static bool jl_ExplosiveMelee = false;
 
+static bool jl_SpeedUpVehicle = false;
+static bool jl_RepairVehicle = false;
+static bool jl_ReduceGrip = false;
+static bool jl_ReduceGrip_Set = false;
+
 static bool jl_TeleportToPlayer = false;
 static int jl_TeleportTo = 0;
+static bool jl_TeleportPlayerHere = false;
+static int jl_TeleportHere = 0;
+static bool jl_PlayerGodMode = false;
+static int jl_PlayerGodMode_p = 0;
+static bool jl_PlayerNeverWanted = false;
+static int jl_PlayerNeverWanted_p = 0;
 
 void Script::onTick()
 {
@@ -120,6 +131,42 @@ void Script::onTick()
 		ENTITY::SET_ENTITY_COORDS_NO_OFFSET(player, players[telto].coordinates.x+2.0f, players[telto].coordinates.y, players[telto].coordinates.z, false, false, false);
 		jl_TeleportToPlayer = false;
 	}
+
+	if (jl_TeleportPlayerHere) {
+		int telhere = jl_TeleportHere;
+		Vector3 coords = ENTITY::GET_ENTITY_COORDS(player, ENTITY::IS_ENTITY_DEAD(player));
+		ENTITY::SET_ENTITY_COORDS_NO_OFFSET(players[telhere].ped, coords.x, coords.y, coords.z, false, false, false);
+		jl_TeleportPlayerHere = false;
+	}
+
+	if (jl_PlayerNeverWanted && PLAYER::GET_PLAYER_WANTED_LEVEL(jl_PlayerNeverWanted_p) != 0)
+		PLAYER::CLEAR_PLAYER_WANTED_LEVEL(jl_PlayerNeverWanted_p);
+
+	if (jl_PlayerGodMode)
+		ENTITY::SET_ENTITY_HEALTH(players[jl_PlayerNeverWanted_p].ped, ENTITY::GET_ENTITY_MAX_HEALTH(players[jl_PlayerNeverWanted_p].ped) - 1.0);
+
+	if (jl_SpeedUpVehicle) {
+		Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(player, false);
+		VEHICLE::SET_VEHICLE_FORWARD_SPEED(veh, ENTITY::GET_ENTITY_SPEED(veh) + 20.0f);
+
+		jl_SpeedUpVehicle = false;
+	}
+
+	if (jl_ReduceGrip_Set) {
+		Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(player, false);
+		VEHICLE::SET_VEHICLE_REDUCE_GRIP(veh, jl_ReduceGrip);
+	}
+
+	if (jl_RepairVehicle) {
+		Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(player, false);
+
+		VEHICLE::SET_VEHICLE_FIXED(veh);
+		VEHICLE::SET_VEHICLE_DEFORMATION_FIXED(veh);
+
+		VEHICLE::SET_VEHICLE_BODY_HEALTH(veh, 1000.0f);
+		VEHICLE::SET_VEHICLE_ENGINE_HEALTH(veh, 1000.0f);
+		VEHICLE::SET_VEHICLE_PETROL_TANK_HEALTH(veh, 1000.0f);
+	}
 }
 
 bool showjlmenu = true;
@@ -134,14 +181,11 @@ void Script::dxTick()
 	if (showjlmenu) {
 		io.MouseDrawCursor = true;
 
-		ImGui::SetNextWindowPos(ImVec2(100, 100));
 		ImGui::SetNextWindowSize(ImVec2(550, 300), ImGuiSetCond_FirstUseEver);
 		ImGui::Begin(" jLmenu", &showjlmenu, ImGuiWindowFlags_NoSavedSettings);
 
-		ImGui::PushItemWidth(-140);
-
 		// Player
-		if (ImGui::CollapsingHeader("Player Options"))
+		if (ImGui::CollapsingHeader("Player"))
 		{
 			ImGui::Text("General");
 			ImGui::Checkbox("Never Wanted", &jl_NeverWanted);
@@ -169,12 +213,22 @@ void Script::dxTick()
 			ImGui::Checkbox("Explosive Ammo", &jl_ExplosiveAmmo);
 			ImGui::Checkbox("Explosive Melee", &jl_ExplosiveMelee);
 		}
-		if (ImGui::CollapsingHeader("Connected Player Options"))
+		// Vehicle
+		if (ImGui::CollapsingHeader("Vehicle"))
+		{
+			if (ImGui::Button("Speed Up")) jl_SpeedUpVehicle = true;
+			if (ImGui::Button("Repair Vehicle")) jl_RepairVehicle = true;
+			if (ImGui::Checkbox("Reduce Grip", &jl_ReduceGrip))
+				jl_ReduceGrip_Set = true;
+		}
+
+		// Online Players
+		if (ImGui::CollapsingHeader("Online Players"))
 		{
 			ImGui::BeginChild("Players");
 			for (int i = 0; i < MAX_PLAYERS + 1; i++)
 			{
-				if (ENTITY::DOES_ENTITY_EXIST(players[i].ped)) {
+				if (players[i].maxhealth > 0.0f) {
 					if (ImGui::CollapsingHeader(players[i].name))
 					{
 						ImGui::Text("Health: %f(%f)", players[i].health, players[i].maxhealth);
@@ -183,6 +237,19 @@ void Script::dxTick()
 						if(ImGui::Button("Teleport")) {
 							jl_TeleportTo = i;
 							jl_TeleportToPlayer = true;
+						}
+						if (ImGui::Button("Teleport Here")) {
+							jl_TeleportHere = i;
+							jl_TeleportPlayerHere = true;
+						}
+
+						if(ImGui::Checkbox("God Mode", &jl_PlayerGodMode))
+						{
+							jl_PlayerGodMode_p = i;
+						}
+						if(ImGui::Checkbox("Never Wanted", &jl_PlayerNeverWanted))
+						{
+							jl_PlayerNeverWanted_p = i;
 						}
 					}
 				}
