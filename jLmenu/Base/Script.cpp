@@ -40,8 +40,8 @@ struct Players {
 	Ped ped;
 
 	char *name;
-	float health;
-	float maxhealth;
+	int health;
+	int maxhealth;
 
 	Vector3 coordinates;
 } players[1000];
@@ -88,7 +88,7 @@ void Script::onTick()
 		PLAYER::CLEAR_PLAYER_WANTED_LEVEL(playerid);
 
 	if (jl_GodMode)
-		ENTITY::SET_ENTITY_HEALTH(player, ENTITY::GET_ENTITY_MAX_HEALTH(player) - 1.0);
+		ENTITY::SET_ENTITY_HEALTH(player, ENTITY::GET_ENTITY_MAX_HEALTH(player) - 1);
 
 	if (PED::CAN_PED_RAGDOLL(player) != !jl_DisableRagdoll)
 		PED::SET_PED_CAN_RAGDOLL(player, !jl_DisableRagdoll);
