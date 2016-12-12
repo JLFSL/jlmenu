@@ -62,6 +62,7 @@ static bool jl_ExplosiveAmmo = false;
 static bool jl_ExplosiveMelee = false;
 static bool jl_StatRP = false;
 static bool jl_StatCash = false;
+static bool jl_StatCash2 = false;
 
 static bool jl_SpeedUpVehicle = false;
 static bool jl_RepairVehicle = false;
@@ -92,7 +93,6 @@ void Script::onTick()
 		players[i].health = ENTITY::GET_ENTITY_HEALTH(players[i].ped);
 		players[i].maxhealth = ENTITY::GET_ENTITY_MAX_HEALTH(players[i].ped);
 
-		
 		players[i].coordinates = ENTITY::GET_ENTITY_COORDS(players[i].ped, ENTITY::IS_ENTITY_DEAD(players[i].ped));
 	}
 
@@ -153,7 +153,11 @@ void Script::onTick()
 
 	if (jl_StatCash)
 	{
-		OBJECT::CREATE_MONEY_PICKUPS(location.x, location.y, location.z+1.0f, 2000, 1, GAMEPLAY::GET_HASH_KEY("prop_money_bag_01"));
+		OBJECT::CREATE_AMBIENT_PICKUP(GAMEPLAY::GET_HASH_KEY("PICKUP_MONEY_CASE"), location.x, location.y, location.z+1.0f, 0, 2000, 1, 0, 1);
+	}
+	if (jl_StatCash2)
+	{
+		OBJECT::CREATE_AMBIENT_PICKUP(GAMEPLAY::GET_HASH_KEY("PICKUP_MONEY_CASE"), location.x, location.y, location.z + 1.0f, 0, 40000, 1, 0, 1);
 	}
 
 	if (jl_TeleportToPlayer) {
@@ -233,7 +237,8 @@ void Script::dxTick()
 
 			ImGui::Text("Statistics");
 			ImGui::Checkbox("RP Cheat", &jl_StatRP);
-			ImGui::Checkbox("Money bags (dont use)", &jl_StatCash);
+			ImGui::Checkbox("Money bags (2k)", &jl_StatCash);
+			ImGui::Checkbox("Money bags (40k)", &jl_StatCash2);
 		}
 		// Vehicle
 		if (ImGui::CollapsingHeader("Vehicle"))
