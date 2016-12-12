@@ -63,6 +63,7 @@ static bool jl_ExplosiveMelee = false;
 static bool jl_StatRP = false;
 static bool jl_StatCash = false;
 static bool jl_StatCash2 = false;
+static bool jl_Yankton = false;
 
 static bool jl_SpeedUpVehicle = false;
 static bool jl_RepairVehicle = false;
@@ -139,7 +140,7 @@ void Script::onTick()
 
 	if (jl_StatRP) {
 		if (PLAYER::GET_PLAYER_WANTED_LEVEL(playerid) == 5) {
-			WAIT(200);
+			WAIT(100);
 			PLAYER::SET_PLAYER_WANTED_LEVEL(playerid, 0, false);
 			PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(playerid, false);
 		} else {
@@ -158,6 +159,81 @@ void Script::onTick()
 	if (jl_StatCash2)
 	{
 		OBJECT::CREATE_AMBIENT_PICKUP(GAMEPLAY::GET_HASH_KEY("PICKUP_MONEY_CASE"), location.x, location.y, location.z + 1.0f, 0, 40000, 1, 0, 1);
+	}
+
+	if (jl_Yankton)
+	{
+		STREAMING::REQUEST_IPL("plg_01");
+		STREAMING::REQUEST_IPL("prologue01");
+		STREAMING::REQUEST_IPL("prologue01_lod");
+		STREAMING::REQUEST_IPL("prologue01c");
+		STREAMING::REQUEST_IPL("prologue01c_lod");
+		STREAMING::REQUEST_IPL("prologue01d");
+		STREAMING::REQUEST_IPL("prologue01d_lod");
+		STREAMING::REQUEST_IPL("prologue01e");
+		STREAMING::REQUEST_IPL("prologue01e_lod");
+		STREAMING::REQUEST_IPL("prologue01f");
+		STREAMING::REQUEST_IPL("prologue01f_lod");
+		STREAMING::REQUEST_IPL("prologue01g");
+		STREAMING::REQUEST_IPL("prologue01h");
+		STREAMING::REQUEST_IPL("prologue01h_lod");
+		STREAMING::REQUEST_IPL("prologue01i");
+		STREAMING::REQUEST_IPL("prologue01i_lod");
+		STREAMING::REQUEST_IPL("prologue01j");
+		STREAMING::REQUEST_IPL("prologue01j_lod");
+		STREAMING::REQUEST_IPL("prologue01k");
+		STREAMING::REQUEST_IPL("prologue01k_lod");
+		STREAMING::REQUEST_IPL("prologue01z");
+		STREAMING::REQUEST_IPL("prologue01z_lod");
+		STREAMING::REQUEST_IPL("plg_02");
+		STREAMING::REQUEST_IPL("prologue02");
+		STREAMING::REQUEST_IPL("prologue02_lod");
+		STREAMING::REQUEST_IPL("plg_03");
+		STREAMING::REQUEST_IPL("prologue03");
+		STREAMING::REQUEST_IPL("prologue03_lod");
+		STREAMING::REQUEST_IPL("prologue03b");
+		STREAMING::REQUEST_IPL("prologue03b_lod");
+		//the commented code disables the 'Prologue' grave and
+		//enables the 'Bury the Hatchet' grave
+		//STREAMING::REQUEST_IPL("prologue03_grv_cov");
+		//STREAMING::REQUEST_IPL("prologue03_grv_cov_lod");
+		STREAMING::REQUEST_IPL("prologue03_grv_dug");
+		STREAMING::REQUEST_IPL("prologue03_grv_dug_lod");
+		//STREAMING::REQUEST_IPL("prologue03_grv_fun");
+		STREAMING::REQUEST_IPL("prologue_grv_torch");
+		STREAMING::REQUEST_IPL("plg_04");
+		STREAMING::REQUEST_IPL("prologue04");
+		STREAMING::REQUEST_IPL("prologue04_lod");
+		STREAMING::REQUEST_IPL("prologue04b");
+		STREAMING::REQUEST_IPL("prologue04b_lod");
+		STREAMING::REQUEST_IPL("prologue04_cover");
+		STREAMING::REQUEST_IPL("des_protree_end");
+		STREAMING::REQUEST_IPL("des_protree_start");
+		STREAMING::REQUEST_IPL("des_protree_start_lod");
+		STREAMING::REQUEST_IPL("plg_05");
+		STREAMING::REQUEST_IPL("prologue05");
+		STREAMING::REQUEST_IPL("prologue05_lod");
+		STREAMING::REQUEST_IPL("prologue05b");
+		STREAMING::REQUEST_IPL("prologue05b_lod");
+		STREAMING::REQUEST_IPL("plg_06");
+		STREAMING::REQUEST_IPL("prologue06");
+		STREAMING::REQUEST_IPL("prologue06_lod");
+		STREAMING::REQUEST_IPL("prologue06b");
+		STREAMING::REQUEST_IPL("prologue06b_lod");
+		STREAMING::REQUEST_IPL("prologue06_int");
+		STREAMING::REQUEST_IPL("prologue06_int_lod");
+		STREAMING::REQUEST_IPL("prologue06_pannel");
+		STREAMING::REQUEST_IPL("prologue06_pannel_lod");
+		STREAMING::REQUEST_IPL("prologue_m2_door");
+		STREAMING::REQUEST_IPL("prologue_m2_door_lod");
+		STREAMING::REQUEST_IPL("plg_occl_00");
+		STREAMING::REQUEST_IPL("prologue_occl");
+		STREAMING::REQUEST_IPL("plg_rd");
+		STREAMING::REQUEST_IPL("prologuerd");
+		STREAMING::REQUEST_IPL("prologuerdb");
+		STREAMING::REQUEST_IPL("prologuerd_lod");
+
+		ENTITY::SET_ENTITY_COORDS_NO_OFFSET(player, 3360.19f, -4849.67f, 111.8f, false, false, false);
 	}
 
 	if (jl_TeleportToPlayer) {
@@ -239,7 +315,9 @@ void Script::dxTick()
 			ImGui::Checkbox("RP Cheat", &jl_StatRP);
 			ImGui::Checkbox("Money bags (2k)", &jl_StatCash);
 			ImGui::Checkbox("Money bags (40k)", &jl_StatCash2);
+			
 		}
+
 		// Vehicle
 		if (ImGui::CollapsingHeader("Vehicle"))
 		{
@@ -248,6 +326,12 @@ void Script::dxTick()
 			if (ImGui::Checkbox("Reduce Grip", &jl_ReduceGrip))
 				jl_ReduceGrip_Set = true;
 			ImGui::Checkbox("Visible", &jl_VVisible);
+		}
+
+		// Teleporting
+		if (ImGui::CollapsingHeader("Teleport"))
+		{
+			if (ImGui::Button("North Yankton")) jl_Yankton = true;
 		}
 
 		// Online Players
