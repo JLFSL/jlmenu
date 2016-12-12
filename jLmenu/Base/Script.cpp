@@ -93,10 +93,7 @@ void Script::onTick()
 		players[i].maxhealth = ENTITY::GET_ENTITY_MAX_HEALTH(players[i].ped);
 
 		
-		Vector3 tempc = ENTITY::GET_ENTITY_COORDS(players[i].ped, ENTITY::IS_ENTITY_DEAD(players[i].ped));
-		players[i].coordinates.x = tempc.x;
-		players[i].coordinates.y = tempc.y;
-		players[i].coordinates.z = tempc.z;
+		players[i].coordinates = ENTITY::GET_ENTITY_COORDS(players[i].ped, ENTITY::IS_ENTITY_DEAD(players[i].ped));
 	}
 
 	ENTITY::SET_ENTITY_VISIBLE(player, jl_Visible, false);
