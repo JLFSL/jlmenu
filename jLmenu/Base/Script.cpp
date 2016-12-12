@@ -134,7 +134,7 @@ void Script::onTick()
 	if (jl_StatRP) {
 		PLAYER::SET_PLAYER_WANTED_LEVEL(playerid, 5, false);
 		PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(playerid, false);
-		PLAYER::CLEAR_PLAYER_WANTED_LEVEL(playerid);
+		//PLAYER::CLEAR_PLAYER_WANTED_LEVEL(playerid);
 	}
 
 	if (jl_TeleportToPlayer) {
@@ -235,7 +235,7 @@ void Script::dxTick()
 			for (int i = 0; i < MAX_PLAYERS + 1; i++)
 			{
 				if (players[i].maxhealth > 0.0f) {
-					if (ImGui::CollapsingHeader(players[i].name))
+					if (ImGui::TreeNode(players[i].name))
 					{
 						ImGui::Text("Health: %f(%f)", players[i].health, players[i].maxhealth);
 						ImGui::Text("Coordinates: %f, %f, %f", players[i].coordinates.x, players[i].coordinates.y, players[i].coordinates.z);
