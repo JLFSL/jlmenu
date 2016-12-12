@@ -61,8 +61,8 @@ static bool jl_FireAmmo = false;
 static bool jl_ExplosiveAmmo = false;
 static bool jl_ExplosiveMelee = false;
 static bool jl_StatRP = false;
+static int jl_StatRP_d = 50;
 static bool jl_StatCash = false;
-static bool jl_StatCash2 = false;
 static bool jl_Yankton = false;
 
 static bool jl_SpeedUpVehicle = false;
@@ -140,7 +140,7 @@ void Script::onTick()
 
 	if (jl_StatRP) {
 		if (PLAYER::GET_PLAYER_WANTED_LEVEL(playerid) == 5) {
-			WAIT(100);
+			WAIT(jl_StatRP_d);
 			PLAYER::SET_PLAYER_WANTED_LEVEL(playerid, 0, false);
 			PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(playerid, false);
 		} else {
@@ -155,10 +155,6 @@ void Script::onTick()
 	if (jl_StatCash)
 	{
 		OBJECT::CREATE_AMBIENT_PICKUP(GAMEPLAY::GET_HASH_KEY("PICKUP_MONEY_CASE"), location.x, location.y, location.z+1.0f, 0, 2000, 1, 0, 1);
-	}
-	if (jl_StatCash2)
-	{
-		OBJECT::CREATE_AMBIENT_PICKUP(GAMEPLAY::GET_HASH_KEY("PICKUP_MONEY_CASE"), location.x, location.y, location.z + 1.0f, 0, 40000, 1, 0, 1);
 	}
 
 	if (jl_Yankton)
@@ -234,6 +230,7 @@ void Script::onTick()
 		STREAMING::REQUEST_IPL("prologuerd_lod");
 
 		ENTITY::SET_ENTITY_COORDS_NO_OFFSET(player, 3360.19f, -4849.67f, 111.8f, false, false, false);
+		jl_Yankton = false;
 	}
 
 	if (jl_TeleportToPlayer) {
@@ -312,9 +309,12 @@ void Script::dxTick()
 			ImGui::Separator();
 
 			ImGui::Text("Statistics");
-			ImGui::Checkbox("RP Cheat", &jl_StatRP);
+			if (ImGui::TreeNode("RP Cheat")) {
+				ImGui::Checkbox("Enable", &jl_StatRP);
+				ImGui::SliderInt("Delay", &jl_StatRP_d, 10, 500);
+				ImGui::TreePop();
+			}
 			ImGui::Checkbox("Money bags (2k)", &jl_StatCash);
-			ImGui::Checkbox("Money bags (40k)", &jl_StatCash2);
 			
 		}
 
@@ -337,7 +337,6 @@ void Script::dxTick()
 		// Online Players
 		if (ImGui::CollapsingHeader("Online Players"))
 		{
-			//ImGui::BeginChild("Players");
 			for (int i = 0; i < MAX_PLAYERS + 1; i++)
 			{
 				if (players[i].maxhealth > 0.0f) {
@@ -354,7 +353,6 @@ void Script::dxTick()
 					}
 				}
 			}
-			//ImGui::EndChild();
 		}
 
 		ImGui::SetWindowFocus();
