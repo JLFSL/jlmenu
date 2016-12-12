@@ -71,6 +71,8 @@ static bool jl_ReduceGrip_Set = false;
 static bool jl_TeleportToPlayer = false;
 static int jl_TeleportTo = 0;
 
+DWORD lasttime;
+
 void Script::onTick()
 {
 	Player playerid = PLAYER::PLAYER_ID();
@@ -132,9 +134,14 @@ void Script::onTick()
 			GAMEPLAY::SET_EXPLOSIVE_MELEE_THIS_FRAME(playerid);
 
 	if (jl_StatRP) {
-		PLAYER::SET_PLAYER_WANTED_LEVEL(playerid, 5, false);
-		PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(playerid, false);
-		//PLAYER::CLEAR_PLAYER_WANTED_LEVEL(playerid);
+		if (PLAYER::GET_PLAYER_WANTED_LEVEL(playerid) == 5) {
+			PLAYER::SET_PLAYER_WANTED_LEVEL(playerid, 0, false);
+			PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(playerid, false);
+		} else {
+			PLAYER::SET_PLAYER_WANTED_LEVEL(playerid, 5, false);
+			PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(playerid, false);
+			PLAYER::SET_PLAYER_WANTED_CENTRE_POSITION(playerid, 1391.773f, 3608.716f, 38.942f);
+		}
 	}
 
 	if (jl_TeleportToPlayer) {
