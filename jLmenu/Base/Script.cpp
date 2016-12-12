@@ -134,8 +134,6 @@ void Script::onTick()
 	if (jl_StatRP) {
 		PLAYER::SET_PLAYER_WANTED_LEVEL(playerid, 5, false);
 		PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(playerid, false);
-
-		PLAYER::SET_PLAYER_WANTED_CENTRE_POSITION(playerid, 9000.0f, 9000.0f, 9000.0f);
 		PLAYER::CLEAR_PLAYER_WANTED_LEVEL(playerid);
 	}
 
@@ -147,7 +145,7 @@ void Script::onTick()
 
 	if (jl_SpeedUpVehicle) {
 		Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(player, false);
-		VEHICLE::SET_VEHICLE_FORWARD_SPEED(veh, ENTITY::GET_ENTITY_SPEED(veh) + 20.0f);
+		VEHICLE::SET_VEHICLE_FORWARD_SPEED(veh, VEHICLE::_GET_VEHICLE_MODEL_MAX_SPEED(ENTITY::GET_ENTITY_MODEL(veh)));
 
 		jl_SpeedUpVehicle = false;
 	}
@@ -166,6 +164,8 @@ void Script::onTick()
 		VEHICLE::SET_VEHICLE_BODY_HEALTH(veh, 1000.0f);
 		VEHICLE::SET_VEHICLE_ENGINE_HEALTH(veh, 1000.0f);
 		VEHICLE::SET_VEHICLE_PETROL_TANK_HEALTH(veh, 1000.0f);
+
+		jl_RepairVehicle = false;
 	}
 }
 
@@ -195,7 +195,7 @@ void Script::dxTick()
 
 			ImGui::Text("Health");
 			if (ImGui::Checkbox("God Mode", &jl_GodMode_t)) jl_GodMode = true;
-			if (ImGui::Checkbox("Visible", &jl_Visible_t)) jl_Visible_t = true;
+			if (ImGui::Checkbox("Visible", &jl_Visible_t)) jl_Visible = true;
 			if (ImGui::Button("Suicide")) jl_Suicide = true;
 
 			ImGui::Separator();
