@@ -63,6 +63,8 @@ static bool jl_ExplosiveMelee = false;
 static bool jl_StatRP = false;
 static int jl_StatRP_d = 50;
 static bool jl_StatCash = false;
+static int jl_StatCash_d = 200;
+static DWORD jl_StatCash_t;
 static bool jl_Yankton = false;
 
 static bool jl_SpeedUpVehicle = false;
@@ -74,9 +76,7 @@ static bool jl_VVisible = true;
 static bool jl_TeleportToPlayer = false;
 static int jl_TeleportTo = 0;
 
-DWORD lasttime;
-
-static int statuc;
+static bool settime = false;
 
 void Script::onTick()
 {
@@ -84,6 +84,11 @@ void Script::onTick()
 	Ped player = PLAYER::GET_PLAYER_PED(playerid);
 	Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(player, false);
 	Vector3 location = ENTITY::GET_ENTITY_COORDS(player, ENTITY::IS_ENTITY_DEAD(player));
+
+	if (!settime) {
+		jl_StatCash_t = timeGetTime();
+		settime = true;
+	}
 
 	for (int i = 0; i < MAX_PLAYERS + 1; i++)
 	{
@@ -154,7 +159,9 @@ void Script::onTick()
 
 	if (jl_StatCash)
 	{
-		OBJECT::CREATE_AMBIENT_PICKUP(GAMEPLAY::GET_HASH_KEY("PICKUP_MONEY_CASE"), location.x, location.y, location.z+1.0f, 0, 2000, 1, 0, 1);
+		if ((timeGetTime() - jl_StatCash_t) > jl_StatCash_d)
+			OBJECT::CREATE_AMBIENT_PICKUP(GAMEPLAY::GET_HASH_KEY("PICKUP_MONEY_CASE"), location.x, location.y, location.z+1.0f, 0, 2000, 1, 0, 1);
+		jl_StatCash_t = timeGetTime();
 	}
 
 	if (jl_Yankton)
@@ -189,13 +196,8 @@ void Script::onTick()
 		STREAMING::REQUEST_IPL("prologue03_lod");
 		STREAMING::REQUEST_IPL("prologue03b");
 		STREAMING::REQUEST_IPL("prologue03b_lod");
-		//the commented code disables the 'Prologue' grave and
-		//enables the 'Bury the Hatchet' grave
-		//STREAMING::REQUEST_IPL("prologue03_grv_cov");
-		//STREAMING::REQUEST_IPL("prologue03_grv_cov_lod");
 		STREAMING::REQUEST_IPL("prologue03_grv_dug");
 		STREAMING::REQUEST_IPL("prologue03_grv_dug_lod");
-		//STREAMING::REQUEST_IPL("prologue03_grv_fun");
 		STREAMING::REQUEST_IPL("prologue_grv_torch");
 		STREAMING::REQUEST_IPL("plg_04");
 		STREAMING::REQUEST_IPL("prologue04");
@@ -309,13 +311,15 @@ void Script::dxTick()
 			ImGui::Separator();
 
 			ImGui::Text("Statistics");
-			if (ImGui::TreeNode("RP Cheat")) {
+			if (ImGui::TreeNode("RP")) {
 				ImGui::Checkbox("Enable", &jl_StatRP);
 				ImGui::SliderInt("Delay", &jl_StatRP_d, 10, 500);
 				ImGui::TreePop();
 			}
-			ImGui::Checkbox("Money bags (2k)", &jl_StatCash);
-			
+			if (ImGui::TreeNode("Money")) {
+				ImGui::Checkbox("Enable", &jl_StatCash);
+				ImGui::SliderInt("Delay", &jl_StatCash_d, 0, 1000);
+			}
 		}
 
 		// Vehicle
