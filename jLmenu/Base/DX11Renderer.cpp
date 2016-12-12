@@ -145,7 +145,7 @@ HRESULT __stdcall hookD3D11Present(IDXGISwapChain* pSwapChain, UINT SyncInterval
 		font_config.MergeMode = true;
 		font_config.OversampleH = font_config.OversampleV = 1;
 		font_config.PixelSnapH = true;
-		ioinit.Fonts->AddFontFromFileTTF("Roboto-Regular.ttf", 18.0f);
+		ioinit.Fonts->AddFontFromFileTTF("Roboto-Regular.ttf", 15.0f);
 	}
 
 	ImGuiIO& io = ImGui::GetIO();

@@ -50,7 +50,6 @@ static bool jl_NeverWanted = false;
 static bool jl_GodMode = false;
 static bool jl_GodMode_t = false;
 static bool jl_Visible = true;
-static bool jl_Visible_t = true;
 static bool jl_DisableRagdoll = false;
 static bool jl_Suicide = false;
 static bool jl_SuperJump = false;
@@ -62,21 +61,27 @@ static bool jl_FireAmmo = false;
 static bool jl_ExplosiveAmmo = false;
 static bool jl_ExplosiveMelee = false;
 static bool jl_StatRP = false;
+static bool jl_StatCash = false;
 
 static bool jl_SpeedUpVehicle = false;
 static bool jl_RepairVehicle = false;
 static bool jl_ReduceGrip = false;
 static bool jl_ReduceGrip_Set = false;
+static bool jl_VVisible = true;
 
 static bool jl_TeleportToPlayer = false;
 static int jl_TeleportTo = 0;
 
 DWORD lasttime;
 
+static int statuc;
+
 void Script::onTick()
 {
 	Player playerid = PLAYER::PLAYER_ID();
 	Ped player = PLAYER::GET_PLAYER_PED(playerid);
+	Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(player, false);
+	Vector3 location = ENTITY::GET_ENTITY_COORDS(player, ENTITY::IS_ENTITY_DEAD(player));
 
 	for (int i = 0; i < MAX_PLAYERS + 1; i++)
 	{
@@ -87,8 +92,15 @@ void Script::onTick()
 		players[i].health = ENTITY::GET_ENTITY_HEALTH(players[i].ped);
 		players[i].maxhealth = ENTITY::GET_ENTITY_MAX_HEALTH(players[i].ped);
 
-		players[i].coordinates = ENTITY::GET_ENTITY_COORDS(players[i].ped, ENTITY::IS_ENTITY_DEAD(players[i].ped));
+		
+		Vector3 tempc = ENTITY::GET_ENTITY_COORDS(players[i].ped, ENTITY::IS_ENTITY_DEAD(players[i].ped));
+		players[i].coordinates.x = tempc.x;
+		players[i].coordinates.y = tempc.y;
+		players[i].coordinates.z = tempc.z;
 	}
+
+	ENTITY::SET_ENTITY_VISIBLE(player, jl_Visible, false);
+	ENTITY::SET_ENTITY_VISIBLE(veh, jl_VVisible, false);
 
 	if (jl_NeverWanted && PLAYER::GET_PLAYER_WANTED_LEVEL(playerid) != 0)
 		PLAYER::CLEAR_PLAYER_WANTED_LEVEL(playerid);
@@ -96,11 +108,6 @@ void Script::onTick()
 	if (jl_GodMode) {
 		ENTITY::SET_ENTITY_INVINCIBLE(player, jl_GodMode_t);
 		jl_GodMode = false;
-	}
-
-	if (jl_Visible) {
-		ENTITY::SET_ENTITY_VISIBLE(player, jl_Visible_t, false);
-		jl_Visible = false;
 	}
 
 	if (PED::CAN_PED_RAGDOLL(player) != !jl_DisableRagdoll)
@@ -135,13 +142,21 @@ void Script::onTick()
 
 	if (jl_StatRP) {
 		if (PLAYER::GET_PLAYER_WANTED_LEVEL(playerid) == 5) {
+			WAIT(200);
 			PLAYER::SET_PLAYER_WANTED_LEVEL(playerid, 0, false);
 			PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(playerid, false);
 		} else {
-			PLAYER::SET_PLAYER_WANTED_LEVEL(playerid, 5, false);
-			PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(playerid, false);
-			PLAYER::SET_PLAYER_WANTED_CENTRE_POSITION(playerid, 1391.773f, 3608.716f, 38.942f);
+			if (PLAYER::GET_PLAYER_WANTED_LEVEL(playerid) == 0) {
+				PLAYER::SET_PLAYER_WANTED_LEVEL(playerid, 5, false);
+				PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(playerid, false);
+				PLAYER::SET_PLAYER_WANTED_CENTRE_POSITION(playerid, 1391.773f, 3608.716f, 38.942f);
+			}
 		}
+	}
+
+	if (jl_StatCash)
+	{
+		OBJECT::CREATE_MONEY_PICKUPS(location.x, location.y, location.z+1.0f, 2000, 1, GAMEPLAY::GET_HASH_KEY("prop_money_bag_01"));
 	}
 
 	if (jl_TeleportToPlayer) {
@@ -151,20 +166,16 @@ void Script::onTick()
 	}
 
 	if (jl_SpeedUpVehicle) {
-		Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(player, false);
 		VEHICLE::SET_VEHICLE_FORWARD_SPEED(veh, VEHICLE::_GET_VEHICLE_MODEL_MAX_SPEED(ENTITY::GET_ENTITY_MODEL(veh)));
 
 		jl_SpeedUpVehicle = false;
 	}
 
 	if (jl_ReduceGrip_Set) {
-		Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(player, false);
 		VEHICLE::SET_VEHICLE_REDUCE_GRIP(veh, jl_ReduceGrip);
 	}
 
 	if (jl_RepairVehicle) {
-		Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(player, false);
-
 		VEHICLE::SET_VEHICLE_FIXED(veh);
 		VEHICLE::SET_VEHICLE_DEFORMATION_FIXED(veh);
 
@@ -202,7 +213,7 @@ void Script::dxTick()
 
 			ImGui::Text("Health");
 			if (ImGui::Checkbox("God Mode", &jl_GodMode_t)) jl_GodMode = true;
-			if (ImGui::Checkbox("Visible", &jl_Visible_t)) jl_Visible = true;
+			ImGui::Checkbox("Visible", &jl_Visible);
 			if (ImGui::Button("Suicide")) jl_Suicide = true;
 
 			ImGui::Separator();
@@ -225,6 +236,7 @@ void Script::dxTick()
 
 			ImGui::Text("Statistics");
 			ImGui::Checkbox("RP Cheat", &jl_StatRP);
+			ImGui::Checkbox("Money bags (dont use)", &jl_StatCash);
 		}
 		// Vehicle
 		if (ImGui::CollapsingHeader("Vehicle"))
@@ -233,12 +245,13 @@ void Script::dxTick()
 			if (ImGui::Button("Repair Vehicle")) jl_RepairVehicle = true;
 			if (ImGui::Checkbox("Reduce Grip", &jl_ReduceGrip))
 				jl_ReduceGrip_Set = true;
+			ImGui::Checkbox("Visible", &jl_VVisible);
 		}
 
 		// Online Players
 		if (ImGui::CollapsingHeader("Online Players"))
 		{
-			ImGui::BeginChild("Players");
+			//ImGui::BeginChild("Players");
 			for (int i = 0; i < MAX_PLAYERS + 1; i++)
 			{
 				if (players[i].maxhealth > 0.0f) {
@@ -251,10 +264,11 @@ void Script::dxTick()
 							jl_TeleportTo = i;
 							jl_TeleportToPlayer = true;
 						}
+						ImGui::TreePop();
 					}
 				}
 			}
-			ImGui::EndChild();
+			//ImGui::EndChild();
 		}
 
 		ImGui::SetWindowFocus();
