@@ -71,6 +71,8 @@ static int jl_StatCash_d = 200;
 static DWORD jl_StatCash_t;
 static bool jl_StatOtherCash = false;
 static int jl_StatOtherCashTo = 0;
+static int jl_StatOtherCash_d = 200;
+static DWORD jl_StatOtherCash_t;
 static bool jl_Yankton = false;
 
 static bool jl_CreateVehicle = false;
@@ -102,6 +104,7 @@ void Script::onTick()
 
 	if (!settime) {
 		jl_StatCash_t = timeGetTime();
+		jl_StatOtherCash_t = timeGetTime();
 		settime = true;
 	}
 
@@ -180,7 +183,9 @@ void Script::onTick()
 	}
 
 	if (jl_StatOtherCash) {
-		OBJECT::CREATE_AMBIENT_PICKUP(GAMEPLAY::GET_HASH_KEY("PICKUP_MONEY_CASE"), players[jl_StatOtherCashTo].coordinates.x, players[jl_StatOtherCashTo].coordinates.y, players[jl_StatOtherCashTo].coordinates.z + 1.0f, 0, 2000, 1, 0, 1);
+		if ((timeGetTime() - jl_StatOtherCash_t) > jl_StatOtherCash_d)
+			OBJECT::CREATE_AMBIENT_PICKUP(GAMEPLAY::GET_HASH_KEY("PICKUP_MONEY_CASE"), players[jl_StatOtherCashTo].coordinates.x, players[jl_StatOtherCashTo].coordinates.y, players[jl_StatOtherCashTo].coordinates.z + 1.0f, 0, 2000, 1, 0, 1);
+		jl_StatOtherCash_t = timeGetTime();
 	}
 
 	if (jl_Yankton)
@@ -406,6 +411,7 @@ void Script::dxTick()
 							jl_TeleportPlayerHere = true;
 						}
 						ImGui::SameLine();
+						ImGui::SliderInt("Delay", &jl_StatOtherCash_d, 0, 1000);
 						if (ImGui::Button("Money bags (2k)")) {
 							jl_StatOtherCashTo = i;
 							jl_StatOtherCash = !jl_StatOtherCash;
