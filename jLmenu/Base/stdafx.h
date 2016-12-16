@@ -55,3 +55,5 @@ using namespace std;
 // Input
 #include "MouseHook.h"
 #include "KeyboardHook.h"
+
+static bool showjlmenu = true;

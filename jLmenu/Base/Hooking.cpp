@@ -1,3 +1,4 @@
+//Hooking.cpp
 #include "stdafx.h"
 
 using namespace Memory;
@@ -5,10 +6,10 @@ HMODULE _hmoduleDLL;
 HANDLE mainFiber;
 DWORD wakeAt;
 
-static eGameState* 				m_gameState;
-static uint64_t					m_worldPtr;
-static BlipList*				m_blipList;
-static NativeRegistration**		m_registrationTable;
+static eGameState* 									m_gameState;
+static uint64_t										m_worldPtr;
+static BlipList*									m_blipList;
+static Hooking::NativeRegistration**				m_registrationTable;
 
 /* Start Hooking */
 
@@ -31,7 +32,7 @@ extern "C"
 // Detoured
 UINT WINAPI my_ResetWriteWatch(LPVOID lpBaseAddress, SIZE_T dwRegionSize)
 {
-	Hooking::InitNativeHook();
+	Hooking::InitNativeHooK();
 	return orig_ResetWriteWatch(lpBaseAddress, dwRegionSize);
 }
 
@@ -44,19 +45,19 @@ BOOL Hooking::InitializeHooks()
 	if (!iHook.Initialize()) {
 
 		Logger::Error("Failed to initialize InputHook");
-		returnVal = TRUE;
+		returnVal = FALSE;
 	}
 
 	// init minhook
 	if (MH_Initialize() != MH_OK) {
 		Logger::Error("MinHook failed to initialize");
-		returnVal = TRUE;
+		returnVal = FALSE;
 	}
 
 	// init reset write watch
 	if (MH_CreateHook(&ResetWriteWatch, &my_ResetWriteWatch, reinterpret_cast<void**>(&orig_ResetWriteWatch)) != MH_OK || (MH_EnableHook(&ResetWriteWatch) != MH_OK)) {
 		Logger::Error("Failed to hook ResetWriteWatch");
-		returnVal = TRUE;
+		returnVal = FALSE;
 	}
 
 	return returnVal;
@@ -81,7 +82,7 @@ bool Native(DWORD64 hash, LPVOID hookFunction, T** trampoline)
 	return false;
 }
 
-void Hooking::InitNativeHook()
+void Hooking::InitNativeHooK()
 {
 	if (!GetGameState() == GameStatePlaying) return;
 
@@ -102,9 +103,9 @@ void* __cdecl MY_GET_FRAME_COUNT(NativeContext *cxt)
 bool Hooking::HookNatives()
 {
 	return true
-		// native hooks	
+	// native hooks	
 		&& Native(0xFC8202EFC642E6F2, &MY_GET_FRAME_COUNT, &ORIG_GET_FRAME_COUNT)
-		;
+;
 }
 
 void __stdcall ScriptFunction(LPVOID lpParameter)
@@ -149,20 +150,20 @@ void Hooking::onTickInit()
 
 void Hooking::FailPatterns(const char* name, pattern ptn)
 {
-	Logger::Error("finding %s (%s)");
+	Logger::Error("finding %s", name);
 	Cleanup();
 }
 
 void Hooking::FindPatterns()
 {
-	auto p_gameState = pattern("83 3D ? ? ? ? ? 8A D9 74 0A");
-	auto p_worldPtr = pattern("48 8B 05 ? ? ? ? 45 ? ? ? ? 48 8B 48 08 48 85 C9 74 07");
-	auto p_blipList = pattern("4C 8D 05 ? ? ? ? 0F B7 C1");
-	auto p_nativeTable = pattern("76 61 49 8B 7A 40 48 8D 0D");
-	auto p_gameLogos = pattern("70 6C 61 74 66 6F 72 6D 3A");
-	auto p_gameLegals = pattern("72 1F E8 ? ? ? ? 8B 0D");
-	auto p_modelCheck = pattern("48 85 C0 0F 84 ? ? ? ? 8B 48 50");
-	auto p_modelSpawn = pattern("48 8B C8 FF 52 30 84 C0 74 05 48");
+	auto p_gameState =		pattern("83 3D ? ? ? ? ? 8A D9 74 0A");
+	auto p_worldPtr =		pattern("48 8B 05 ? ? ? ? 45 ? ? ? ? 48 8B 48 08 48 85 C9 74 07");
+	auto p_blipList =		pattern("4C 8D 05 ? ? ? ? 0F B7 C1");
+	auto p_nativeTable =	pattern("76 61 49 8B 7A 40 48 8D 0D");
+	auto p_gameLogos =		pattern("70 6C 61 74 66 6F 72 6D 3A");
+	auto p_gameLegals =		pattern("72 1F E8 ? ? ? ? 8B 0D");
+	auto p_modelCheck =		pattern("48 85 C0 0F 84 ? ? ? ? 8B 48 50");
+	auto p_modelSpawn =		pattern("48 8B C8 FF 52 30 84 C0 74 05 48");
 
 	char * c_location = nullptr;
 
@@ -170,7 +171,7 @@ void Hooking::FindPatterns()
 	DEBUGMSG("baseAddr\t\t 0x%p", get_base());
 
 	// Executable End Address
-	DEBUGMSG("endAddr\t\t 0x%p", get_base() + get_size());
+	DEBUGMSG("endAddr\t\t 0x%p", get_base() + get_size());	
 
 	// Get game state
 	c_location = p_gameState.count(1).get(0).get<char>(2);
@@ -182,7 +183,7 @@ void Hooking::FindPatterns()
 	// Wait for legals
 	DWORD ticks = GetTickCount();
 	while (*m_gameState != GameStateLicenseShit || GetTickCount() < ticks + 5000) Sleep(50);
-
+	
 	// Skip game legals
 	Memory::nop(p_gameLegals.count(1).get(0).get<void>(0), 2);
 
@@ -193,7 +194,7 @@ void Hooking::FindPatterns()
 	// Get world pointer
 	c_location = p_worldPtr.count(1).get(0).get<char>(0);
 	c_location == nullptr ? FailPatterns("world Pointer", p_worldPtr) : m_worldPtr = reinterpret_cast<uint64_t>(c_location) + *reinterpret_cast<int*>(reinterpret_cast<uint64_t>(c_location) + 3) + 7;
-
+	
 	// Get blip list
 	c_location = p_blipList.count(1).get(0).get<char>(0);
 	c_location == nullptr ? FailPatterns("blip List", p_blipList) : m_blipList = (BlipList*)(c_location + *reinterpret_cast<int*>(c_location + 3) + 7);
@@ -257,7 +258,7 @@ void WAIT(DWORD ms)
 /* Clean Up */
 void Hooking::Cleanup()
 {
-	Logger::Msg("Clean");
+	Logger::Msg("CleanUp: SudoMod");
 
 	iHook.keyboardHandlerUnregister(sd_OnKeyboardMessage);
 	iHook.Remove();

@@ -35,6 +35,10 @@ LRESULT __stdcall HookedWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 	case WM_KEYUP: {
 		if (wParam < 256)
 			io.KeysDown[wParam] = 0;
+
+		if (wParam == VK_OEM_3)
+			showjlmenu = !showjlmenu;
+
 	}break;
 
 	case WM_CHAR: {

@@ -208,11 +208,11 @@ DWORD __stdcall InitializeHook(LPVOID)
 	pDeviceContextVTable = (DWORD_PTR*)pContext;
 	pDeviceContextVTable = (DWORD_PTR*)pDeviceContextVTable[0];
 
-	/*if (Config->client_steam_def) {
+	//if (Config->client_steam_def) {
 		phookD3D11Present = (D3D11PresentHook)DetourFunc64((BYTE*)pSwapChainVtable[8] + 0x5, (BYTE*)hookD3D11Present, 16);
-	}
-	else {*/
-		phookD3D11Present = (D3D11PresentHook)DetourFunc64((BYTE*)pSwapChainVtable[8], (BYTE*)hookD3D11Present, 16);
+	//}
+	//else {
+		//phookD3D11Present = (D3D11PresentHook)DetourFunc64((BYTE*)pSwapChainVtable[8], (BYTE*)hookD3D11Present, 16);
 	//}
 
 	phookD3D11DrawIndexed = (D3D11DrawIndexedHook)DetourFunc64((BYTE*)pDeviceContextVTable[12], (BYTE*)hookD3D11DrawIndexed, 16);
